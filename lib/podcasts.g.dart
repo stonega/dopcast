@@ -62,7 +62,7 @@ EpisodeItem<A> _$EpisodeItemFromJson<A>(Map<String, dynamic> json) {
       contentHtml: json['content_html'] as String,
       summary: json['summary'] as String,
       datePublished: json['date_published'] as String,
-      attachments: (json['atttachments'] as List)
+      attachments: (json['attachments'] as List)
           ?.map((e) => e == null ? null : _ConvertA<A>().fromJson(e))
           ?.toList());
 }
@@ -76,7 +76,7 @@ Map<String, dynamic> _$EpisodeItemToJson<A>(EpisodeItem<A> instance) =>
       'content_html': instance.contentHtml,
       'summary': instance.summary,
       'date_published': instance.datePublished,
-      'atttachments': instance.attachments
+      'attachments': instance.attachments
           ?.map((e) => e == null ? null : _ConvertA<A>().toJson(e))
           ?.toList()
     };

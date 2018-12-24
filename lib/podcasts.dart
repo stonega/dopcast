@@ -73,7 +73,6 @@ class EpisodeItem<A>{
   final String summary;
   @JsonKey(name: 'date_published')
   final String datePublished;
-  @JsonKey(name: 'atttachments')
   @_ConvertA()
   final List<A> attachments;
   EpisodeItem({this.id, this.title, this.url, this.contentText, this.contentHtml, this.summary, this.datePublished, this.attachments}
@@ -83,7 +82,7 @@ class EpisodeItem<A>{
   Map<String, dynamic> toJson() => _$EpisodeItemToJson(this);
 }
 
-class _ConvertA<A> implements JsonConverter<A, Object>{
+class _ConvertA<A> implements JsonConverter<A, Object> {
   const _ConvertA();
   @override
   A fromJson(Object json){

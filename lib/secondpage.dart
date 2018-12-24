@@ -5,6 +5,7 @@ import 'podcasts.dart';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'episodedetail.dart';
 
 class PodcastLocal {
   final String title;
@@ -141,13 +142,16 @@ class PodcastDetail extends StatelessWidget {
   }
 }
 
+
+
 class Show extends StatelessWidget {
   final Podcast podcast;
   final PodcastLocal podcastLocal;
   Show({Key key, this.podcast, this.podcastLocal}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
+return 
+    CustomScrollView(
       primary: false,
       slivers: <Widget>[
         SliverPadding(
@@ -161,7 +165,20 @@ class Show extends StatelessWidget {
             ),
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return Container(
+                return
+                InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EpisodeDetail(
+                                    episodeItem: podcast.items[index],
+                                    podcast: podcast,
+                                  )
+                                  ),
+                        );
+                      },
+                      child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
                       color: Theme.of(context).scaffoldBackgroundColor,
@@ -211,7 +228,9 @@ class Show extends StatelessWidget {
                       ),
                     ],
                   ),
+                ),
                 );
+                 
               },
               childCount: podcast.items.length,
             ),
