@@ -86,7 +86,7 @@ Attachment _$AttachmentFromJson(Map<String, dynamic> json) {
       url: json['url'] as String,
       mimeType: json['mime_type'] as String,
       sizeInBytes: json['size_in_bytes'] as int,
-      durationInSeconds: json['dutation_in_seconds'] as int);
+      durationInSeconds: json['duration_in_seconds'] as int);
 }
 
 Map<String, dynamic> _$AttachmentToJson(Attachment instance) =>
@@ -94,5 +94,5 @@ Map<String, dynamic> _$AttachmentToJson(Attachment instance) =>
       'url': instance.url,
       'mime_type': instance.mimeType,
       'size_in_bytes': instance.sizeInBytes,
-      'dutation_in_seconds': instance.durationInSeconds
+      'duration_in_seconds': instance.durationInSeconds
     };

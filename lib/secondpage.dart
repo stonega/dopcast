@@ -142,16 +142,13 @@ class PodcastDetail extends StatelessWidget {
   }
 }
 
-
-
 class Show extends StatelessWidget {
   final Podcast podcast;
   final PodcastLocal podcastLocal;
   Show({Key key, this.podcast, this.podcastLocal}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-return 
-    CustomScrollView(
+    return CustomScrollView(
       primary: false,
       slivers: <Widget>[
         SliverPadding(
@@ -165,72 +162,91 @@ return
             ),
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return
-                InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EpisodeDetail(
-                                    episodeItem: podcast.items[index],
-                                    podcast: podcast,
-                                  )
-                                  ),
-                        );
-                      },
-                      child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      border: Border.all(
-                        color: Colors.grey[200],
-                        width: 2.0,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey[100],
-                          blurRadius: 1.0,
-                          spreadRadius: 0.5,
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EpisodeDetail(
+                                episodeItem: podcast.items[index],
+                                podcast: podcast,
+                                podcastLocal: podcastLocal,
+                              )),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        border: Border.all(
+                          color: Colors.grey[200],
+                          width: 2.0,
                         ),
-                      ]),
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          ClipRRect(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15.0)),
-                            child: Image.asset(
-                              podcastLocal.imageUrl,
-                              height: 30.0,
-                              width: 30.0,
-                              fit: BoxFit.fitWidth,
-                              alignment: Alignment.topCenter,
-                            ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey[100],
+                            blurRadius: 1.0,
+                            spreadRadius: 0.5,
                           ),
-                          //   Text(podcastLocal.title, style: TextStyle(fontSize: 15.0, color: Colors.blue[900], fontWeight: FontWeight.bold, letterSpacing: 1.0),),
-                          Spacer(),
-                          Text((podcast.items.length - index).toString(),
-                              style: TextStyle(
-                                  fontSize: 30.0, color: Colors.blue[900], fontFamily: 'ConcertOne')),
-                        ],
-                      ),
-                      Container(
-                        child: Text(
-                          podcast.items[index].title,
-                          style: TextStyle(fontSize: 15.0),
-                          maxLines: 3,
+                        ]),
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15.0)),
+                              child: Image.asset(
+                                podcastLocal.imageUrl,
+                                height: 30.0,
+                                width: 30.0,
+                                fit: BoxFit.fitWidth,
+                                alignment: Alignment.center,
+                              ),
+                            ),
+                            ),
+                            //   Text(podcastLocal.title, style: TextStyle(fontSize: 15.0, color: Colors.blue[900], fontWeight: FontWeight.bold, letterSpacing: 1.0),),
+                            Spacer(),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Text((podcast.items.length - index).toString(),
+                                style: TextStyle(
+                                    fontSize: 35.0,
+                                    color: Colors.blue[300],
+                                    fontFamily: 'ConcertOne'
+                                   )),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                        ),
+                       Expanded(
+                         flex: 5,
+                         child: Container(
+                          child: Text(
+                            podcast.items[index].title,
+                            style: TextStyle(fontSize: 15.0),
+                            maxLines: 3,
+                          ),
+                        ),
+                       ), 
+                       Expanded(
+                         flex: 1,
+                         child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(podcast.items[index].datePublished.substring(0,10),style: TextStyle(color: Colors.grey[900]),),
+                        ),
+                       ),
+                      ],
+                    ),
                   ),
-                ),
                 );
-                 
               },
               childCount: podcast.items.length,
             ),

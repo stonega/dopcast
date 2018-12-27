@@ -101,7 +101,7 @@ class Attachment{
   final String mimeType;
   @JsonKey(name: 'size_in_bytes')
   final int sizeInBytes;
-  @JsonKey(name: 'dutation_in_seconds')
+  @JsonKey(name: 'duration_in_seconds')
   final int durationInSeconds;
   Attachment(
     {this.url, this.mimeType, this.sizeInBytes, this.durationInSeconds}
