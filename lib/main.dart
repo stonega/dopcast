@@ -5,6 +5,7 @@ import 'episode.dart';
 import 'episodelist.dart';
 import 'firstpage.dart';
 import 'secondpage.dart';
+import 'player.dart';
 
 void main() 
   async{
@@ -37,7 +38,7 @@ class _TsacDopState extends State<TsacDop> {
   final _widgetOptions = [
     Center(child: FirstPage()),
     PodcastGrid(podcastlist),
-    Text('Index 2 : Scholl'),
+    AudioApp('http://www.rxlabz.com/labz/audio2.mp3'),
   ];
   @override
   Widget build(BuildContext context) {

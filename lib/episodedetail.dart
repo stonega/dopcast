@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'podcasts.dart';
 import 'secondpage.dart';
+import 'player.dart';
 
 class EpisodeDetail extends StatelessWidget {
   final EpisodeItem episodeItem;
@@ -8,8 +9,7 @@ class EpisodeDetail extends StatelessWidget {
   final PodcastLocal podcastLocal;
   EpisodeDetail({this.episodeItem, this.podcast, this.podcastLocal, Key key})
       : super(key: key);
-  var textstyle =
-      TextStyle(fontFamily: 'ConcertOne', fontSize: 25.0, color: Colors.red);
+  var textstyle = TextStyle(fontSize: 15.0, color: Colors.white);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,92 +27,74 @@ class EpisodeDetail extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Container(
-                child: Row(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                      flex: 2,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              Expanded(
-                                flex: 4,
-                                child: Container(
-                                  padding: EdgeInsets.all(12.0),
-                                  alignment: Alignment.topLeft,
-                                  width: 300.0,
-                                  child: Text(
-                                    episodeItem.title,
-                                    style: Theme.of(context).textTheme.title,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  padding: EdgeInsets.all(12.0),
-                                  width: 300.0,
-                                  child: Text(((episodeItem.attachments[0]
-                                                  .sizeInBytes) ~/
-                                              1000000)
-                                          .toString() +
-                                      'M'),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
                     Expanded(
                       flex: 1,
                       child: Container(
-                        alignment: Alignment.center,
-                        width: 100.0,
-                        height: 100.0,
-                        child: Container(
-                          height: 100.0,
-                          width: 100.0,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              color: Colors.grey[200],
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey[200],
-                                  blurRadius: 2.0,
-                                  spreadRadius: 0.5,
-                                ),
-                              ]),
-                          padding: EdgeInsets.all(5.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Text(
-                                  ((episodeItem.attachments[0].sizeInBytes) ~/
-                                              1000000)
-                                          .toString() +
-                                      'mb',
-                                  style: textstyle),
-                              Text(
-                                ((episodeItem.attachments[0]
-                                                .durationInSeconds) ~/
-                                            60)
-                                        .toString() +
-                                    'mins',
-                                style: textstyle,
-                              ),
-                              Text(
-                                '0played',
-                                style: textstyle,
-                              ),
-                            ],
-                          ),
+                        padding: EdgeInsets.symmetric(horizontal: 12.0),
+                        alignment: Alignment.topLeft,
+                        width: 350.0,
+                        child: Text(
+                          episodeItem.title,
+                          style: Theme.of(context).textTheme.title,
                         ),
+                      ),
+                    ),
+                    Spacer(),
+                    Expanded(
+                      flex: 2,
+                      child: Stack(
+                        children: <Widget>[
+                          AudioApp(episodeItem.attachments[0].url),
+                          Container(
+                            margin: EdgeInsets.only(left: 100.0, top: 10.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15.0))),
+                                  width: 50.0,
+                                  height: 25.0,
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                      ((episodeItem.attachments[0]
+                                                      .sizeInBytes) ~/
+                                                  1000000)
+                                              .toString() +
+                                          'MB',
+                                      style: textstyle),
+                                ),
+                                Container(
+                                  width: 10.0,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15.0))),
+                                  width: 70.0,
+                                  height: 25.0,
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    ((episodeItem.attachments[0]
+                                                    .durationInSeconds) ~/
+                                                60)
+                                            .toString() +
+                                        'mins',
+                                    style: textstyle,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -122,7 +104,7 @@ class EpisodeDetail extends StatelessWidget {
             Expanded(
               flex: 5,
               child: Container(
-                padding: EdgeInsets.all(12.0),
+                padding: EdgeInsets.symmetric(horizontal: 12.0),
                 child: SingleChildScrollView(
                   child: Text(episodeItem.contentText),
                 ),
