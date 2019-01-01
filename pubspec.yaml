@@ -24,6 +24,7 @@ dependencies:
   flutter_statusbarcolor: any 
   audioplayer: any
   path_provider: any
+  material_search: ^0.2.8
 dev_dependencies:
   build_runner: ^1.0.0
   json_serializable: ^2.0.0

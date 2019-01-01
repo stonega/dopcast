@@ -36,7 +36,6 @@ class EpisodeDetail extends StatelessWidget {
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 12.0),
                         alignment: Alignment.topLeft,
-                        width: 350.0,
                         child: Text(
                           episodeItem.title,
                           style: Theme.of(context).textTheme.title,
@@ -104,7 +103,7 @@ class EpisodeDetail extends StatelessWidget {
             Expanded(
               flex: 5,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.0),
+                padding: EdgeInsets.only(left: 12.0, right: 12.0, top: 5.0),
                 child: SingleChildScrollView(
                   child: Text(episodeItem.contentText),
                 ),
