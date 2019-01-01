@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'searchpodcast.dart';
+import 'class/searchpodcast.dart';
+import 'class/podcastlocal.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -21,6 +22,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final globalKey = GlobalKey<ScaffoldState>();
   final TextEditingController _controller = TextEditingController();
   bool _isSearching;
+  bool _subscribed;
   String _searchText = '';
 
   _MyHomePageState() {
@@ -43,11 +45,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _isSearching = false;
+    _subscribed = false;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       key: globalKey,
       appBar: buildAppBar(context),
       body: Container(
@@ -56,35 +60,45 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Flexible(
-              child:  _controller.text.isNotEmpty
+              child: _controller.text.isNotEmpty
                   ? FutureBuilder(
                       future: getList(_searchText),
                       builder:
                           (BuildContext context, AsyncSnapshot<List> snapshot) {
-                        if (!snapshot.hasData) return Center(child: CircularProgressIndicator(),);
+                        if (!snapshot.hasData)
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
                         List content = snapshot.data;
                         return ListView.builder(
                           scrollDirection: Axis.vertical,
                           itemCount: content.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Container(
-                              padding: EdgeInsets.all(10.0),
+                              padding: EdgeInsets.symmetric(horizontal: 12.0),
                               child: ListTile(
                                 leading: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0)),
-                              child: Image.network(
-                                content[index].image,
-                                height: 30.0,
-                                width: 30.0,
-                                fit: BoxFit.fitWidth,
-                                alignment: Alignment.center,
-                              ),
-                            ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0)),
+                                  child: Image.network(
+                                    content[index].image,
+                                    height: 40.0,
+                                    width: 40.0,
+                                    fit: BoxFit.fitWidth,
+                                    alignment: Alignment.center,
+                                  ),
+                                ),
                                 title: Text(content[index].title),
                                 subtitle: Text(content[index].publisher),
+                                trailing: !_subscribed
+                               ? OutlineButton(
+                                child: Text('Subscribe', style:TextStyle(color: Colors.blue)),
+                                onPressed: (){
+                                  _subscribe(content[index].title);})
+                               : OutlineButton(
+                                child: Text('Subscribed'),
+                                onPressed: null),
                               ),
-                             
                             );
                           },
                         );
@@ -98,6 +112,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  void _subscribe(String t) {
+    podcastlist.add(PodcastLocal(t, "images/7-stories.jpg", "data/lushu.json"));
+    setState(() {
+          _subscribed = !_subscribed;
+        });
   }
 
   Widget buildAppBar(BuildContext context) {
@@ -114,17 +135,17 @@ class _MyHomePageState extends State<MyHomePage> {
               this.appBarTitle = new TextField(
                 controller: _controller,
                 autofocus: true,
-                
+
                 style: new TextStyle(
                   color: Colors.blue,
                   fontSize: 20.0,
                 ),
-                decoration:  InputDecoration(
-                border: InputBorder.none  ,
-                    prefixIcon:  Icon(Icons.search, color: Colors.black),
-                    hintText: "Search...",
-                   // hintStyle:  TextStyle(color: Colors.black)
-                   ),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  prefixIcon: Icon(Icons.search, color: Colors.black),
+                  hintText: "Search...",
+                  // hintStyle:  TextStyle(color: Colors.black)
+                ),
                 // onChanged: searchOperation,
               );
               _handleSearchStart();
@@ -145,11 +166,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _handleSearchEnd() {
     setState(() {
-      this.icon = new Icon(
+      this.icon = Icon(
         Icons.search,
         color: Colors.blue,
       );
-      this.appBarTitle = new Text(
+      this.appBarTitle = Text(
         "Search Sample",
         style: new TextStyle(color: Colors.blue),
       );

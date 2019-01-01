@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'podcasts.dart';
 import 'secondpage.dart';
 import 'player.dart';
+import 'class/podcastlocal.dart';
 
 class EpisodeDetail extends StatelessWidget {
   final EpisodeItem episodeItem;

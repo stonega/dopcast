@@ -6,6 +6,7 @@ import 'episodelist.dart';
 import 'firstpage.dart';
 import 'secondpage.dart';
 import 'searchexample.dart';
+import 'class/podcastlocal.dart';
 
 void main() 
   async{
