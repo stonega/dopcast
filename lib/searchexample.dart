@@ -4,7 +4,8 @@ import 'class/podcastlocal.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'class/sqflite.dart';
+import 'class/sqflite_localpodcast.dart';
+import 'class/sqflite_episodes.dart';
 
 class SearchResult extends StatefulWidget {
   OnlinePodcast onlinePodcast;
@@ -13,9 +14,11 @@ class SearchResult extends StatefulWidget {
   _SearchResultState createState() => _SearchResultState();
 }
 
+
+
 class _SearchResultState extends State<SearchResult> {
   bool _issubscribe;
-  void _subscribe(OnlinePodcast t) {
+  void _subscribe(OnlinePodcast t) async{
     podcastlist.add(PodcastLocal(t.title, t.image, t.rss));
     var dbHelper =DBHelper();
     final PodcastLocal pdt =PodcastLocal(t.title, t.image, t.rss);
@@ -25,6 +28,9 @@ class _SearchResultState extends State<SearchResult> {
     setState(() {
       _issubscribe = !_issubscribe;
     });
+     var dbEpHelper = DBEpisode();
+  final response = await http.get(t.rss);
+  dbEpHelper.savePodcastRss(response.body);
   }
 
   @override

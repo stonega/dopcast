@@ -8,8 +8,10 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'episodedetail.dart';
 import 'class/podcastlocal.dart';
 import 'package:webfeed/webfeed.dart';
-import 'class/sqflite.dart';
+import 'class/sqflite_localpodcast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'class/episodebrief.dart';
+import 'class/sqflite_episodes.dart';
 
 Future<List<PodcastLocal>> getPodcastLocal() async {
   var dbHelper = DBHelper();
@@ -82,7 +84,8 @@ class PodcastGrid extends StatelessWidget {
                                           child: CachedNetworkImage(
                                             imageUrl:
                                                 snapshot.data[index].imageUrl,
-                                            placeholder: (context,url) => CircularProgressIndicator(),
+                                            placeholder: (context, url) =>
+                                                CircularProgressIndicator(),
                                           ),
                                         ),
                                         // child: Image.network(
@@ -132,6 +135,12 @@ RssFeed podcast(String responseBody) {
   return podcast;
 }
 
+Future<List<EpisodeBrief>> getRssItem(PodcastLocal podcastLocal) async {
+  var dbEpHelper = DBEpisode();
+  Future<List<EpisodeBrief>> episodes = dbEpHelper.getRssItem(podcastLocal.title);
+  return episodes;
+}
+
 class PodcastDetail extends StatelessWidget {
   PodcastDetail({Key key, this.podcastLocal}) : super(key: key);
   final PodcastLocal podcastLocal;
@@ -144,7 +153,16 @@ class PodcastDetail extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: true,
       ),
-      body: FutureBuilder<RssFeed>(
+      body: FutureBuilder<List<EpisodeBrief>>(
+        future: getRssItem(podcastLocal),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) print(snapshot.error);
+          return snapshot.hasData
+              ? Show(podcast: snapshot.data, podcastLocal: podcastLocal)
+              : Center(child: CircularProgressIndicator());
+        },
+      ),
+/*       body: FutureBuilder<RssFeed>(
         future: fetchPodcast(podcastLocal),
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
@@ -155,13 +173,13 @@ class PodcastDetail extends StatelessWidget {
                 )
               : Center(child: CircularProgressIndicator());
         },
-      ),
+      ), */
     );
   }
 }
 
 class Show extends StatelessWidget {
-  final RssFeed podcast;
+  final List<EpisodeBrief> podcast;
   final PodcastLocal podcastLocal;
   Show({Key key, this.podcast, this.podcastLocal}) : super(key: key);
   @override
@@ -186,7 +204,7 @@ class Show extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => EpisodeDetail(
-                                episodeItem: podcast.items[index],
+                                episodeItem: podcast[index],
                                 podcast: podcast,
                                 podcastLocal: podcastLocal,
                               )),
@@ -241,8 +259,7 @@ class Show extends StatelessWidget {
                               Spacer(),
                               Align(
                                 alignment: Alignment.topRight,
-                                child: Text(
-                                    (podcast.items.length - index).toString(),
+                                child: Text((podcast.length - index).toString(),
                                     style: TextStyle(
                                         fontSize: 35.0,
                                         color: Colors.blue[300],
@@ -255,7 +272,7 @@ class Show extends StatelessWidget {
                           flex: 5,
                           child: Container(
                             child: Text(
-                              podcast.items[index].title,
+                              podcast[index].title,
                               style: TextStyle(fontSize: 15.0),
                               maxLines: 3,
                             ),
@@ -266,7 +283,7 @@ class Show extends StatelessWidget {
                           child: Align(
                             alignment: Alignment.bottomLeft,
                             child: Text(
-                              podcast.items[index].pubDate.substring(0, 10),
+                              podcast[index].pubDate.substring(0, 10),
                               style: TextStyle(color: Colors.grey[900]),
                             ),
                           ),
@@ -276,7 +293,7 @@ class Show extends StatelessWidget {
                   ),
                 );
               },
-              childCount: podcast.items.length,
+              childCount: podcast.length,
             ),
           ),
         ),

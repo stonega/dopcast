@@ -5,10 +5,11 @@ import 'player.dart';
 import 'class/podcastlocal.dart';
 import 'package:webfeed/webfeed.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'class/episodebrief.dart';
 
 class EpisodeDetail extends StatelessWidget {
-  final RssItem episodeItem;
-  final RssFeed podcast;
+  final EpisodeBrief episodeItem;
+  final List<EpisodeBrief> podcast;
   final PodcastLocal podcastLocal;
   EpisodeDetail({this.episodeItem, this.podcast, this.podcastLocal, Key key})
       : super(key: key);
@@ -17,7 +18,7 @@ class EpisodeDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(podcast.title),
+        title: Text(podcastLocal.title),
         elevation: 0.0,
         centerTitle: true,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -50,7 +51,7 @@ class EpisodeDetail extends StatelessWidget {
                       flex: 2,
                       child: Stack(
                         children: <Widget>[
-                          AudioApp(episodeItem.enclosure.url),
+                          AudioApp(episodeItem.enclosureUrl),
                           Container(
                             margin: EdgeInsets.only(left: 100.0, top: 10.0),
                             child: Row(
@@ -66,9 +67,7 @@ class EpisodeDetail extends StatelessWidget {
                                   height: 25.0,
                                   alignment: Alignment.center,
                                   child: Text(
-                                      ((episodeItem.enclosure.length
-                                                      ) ~/
-                                                  1000000)
+                                      ((episodeItem.enclosureLength)~/1000000)
                                               .toString() +
                                           'MB',
                                       style: textstyle),
@@ -76,7 +75,7 @@ class EpisodeDetail extends StatelessWidget {
                                 Container(
                                   width: 10.0,
                                 ),
-                                Container(
+                              /*   Container(
                                   decoration: BoxDecoration(
                                       color: Colors.blue,
                                       borderRadius: BorderRadius.all(
@@ -85,14 +84,12 @@ class EpisodeDetail extends StatelessWidget {
                                   height: 25.0,
                                   alignment: Alignment.center,
                                   child: Text(
-                                    ((episodeItem.enclosure.length
-                                                   ) ~/
-                                                60)
+                                    ((episodeItem.enclosureLength) ~/ 60)
                                             .toString() +
                                         'mins',
                                     style: textstyle,
                                   ),
-                                ),
+                                ), */
                               ],
                             ),
                           ),

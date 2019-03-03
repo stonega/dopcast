@@ -25,7 +25,7 @@ dependencies:
   audioplayer: any
   path_provider: any
   xml: ^3.2.3
-  webfeed: ^0.4.1
+  webfeed: ^0.4.2
   sqflite: any
   cached_network_image: ^0.6.2
   flutter_html: ^0.9.4
