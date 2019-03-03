@@ -8,11 +8,10 @@ import 'secondpage.dart';
 import 'searchexample.dart';
 import 'class/podcastlocal.dart';
 
-void main() 
-  async{
+void main() async {
   try {
     await FlutterStatusbarcolor.setStatusBarColor(Color(0x00000000));
-  }  catch (e) {
+  } catch (e) {
     print(e);
   }
 
@@ -38,8 +37,8 @@ class _TsacDopState extends State<TsacDop> {
   int _selectedIndex = 1;
   final _widgetOptions = [
     Center(child: FirstPage()),
-    PodcastGrid(podcastlist),
-    MyHomePage()
+    PodcastGrid(),
+    MyHomePage(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -75,4 +74,3 @@ class _TsacDopState extends State<TsacDop> {
     });
   }
 }
-

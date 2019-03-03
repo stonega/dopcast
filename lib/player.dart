@@ -154,12 +154,12 @@ class _AudioAppState extends State<AudioApp> {
         new Row(
           mainAxisAlignment: MainAxisAlignment.start,
            children: [
-          new IconButton(
+          !isPlaying ? IconButton(
               onPressed: isPlaying ? null : () => play(),
               iconSize: 32.0,
               icon: new Icon(Icons.play_arrow),
-              color: Colors.cyan),
-          new IconButton(
+              color: Colors.cyan)
+           : IconButton(
               onPressed: isPlaying ? () => pause() : null,
               iconSize: 32.0,
               icon: new Icon(Icons.pause),

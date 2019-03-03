@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'podcasts.dart';
+import 'class/podcasts.dart';
 import 'secondpage.dart';
 import 'player.dart';
 import 'class/podcastlocal.dart';
+import 'package:webfeed/webfeed.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class EpisodeDetail extends StatelessWidget {
-  final EpisodeItem episodeItem;
-  final Podcast podcast;
+  final RssItem episodeItem;
+  final RssFeed podcast;
   final PodcastLocal podcastLocal;
   EpisodeDetail({this.episodeItem, this.podcast, this.podcastLocal, Key key})
       : super(key: key);
@@ -48,7 +50,7 @@ class EpisodeDetail extends StatelessWidget {
                       flex: 2,
                       child: Stack(
                         children: <Widget>[
-                          AudioApp(episodeItem.attachments[0].url),
+                          AudioApp(episodeItem.enclosure.url),
                           Container(
                             margin: EdgeInsets.only(left: 100.0, top: 10.0),
                             child: Row(
@@ -64,8 +66,8 @@ class EpisodeDetail extends StatelessWidget {
                                   height: 25.0,
                                   alignment: Alignment.center,
                                   child: Text(
-                                      ((episodeItem.attachments[0]
-                                                      .sizeInBytes) ~/
+                                      ((episodeItem.enclosure.length
+                                                      ) ~/
                                                   1000000)
                                               .toString() +
                                           'MB',
@@ -83,8 +85,8 @@ class EpisodeDetail extends StatelessWidget {
                                   height: 25.0,
                                   alignment: Alignment.center,
                                   child: Text(
-                                    ((episodeItem.attachments[0]
-                                                    .durationInSeconds) ~/
+                                    ((episodeItem.enclosure.length
+                                                   ) ~/
                                                 60)
                                             .toString() +
                                         'mins',
@@ -106,7 +108,7 @@ class EpisodeDetail extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.only(left: 12.0, right: 12.0, top: 5.0),
                 child: SingleChildScrollView(
-                  child: Text(episodeItem.contentText),
+                  child: Html(data: episodeItem.description),
                 ),
               ),
             ),

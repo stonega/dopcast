@@ -4,6 +4,63 @@ import 'class/podcastlocal.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'class/sqflite.dart';
+
+class SearchResult extends StatefulWidget {
+  OnlinePodcast onlinePodcast;
+  SearchResult({this.onlinePodcast,Key key}) : super(key: key);
+  @override
+  _SearchResultState createState() => _SearchResultState();
+}
+
+class _SearchResultState extends State<SearchResult> {
+  bool _issubscribe;
+  void _subscribe(OnlinePodcast t) {
+    podcastlist.add(PodcastLocal(t.title, t.image, t.rss));
+    var dbHelper =DBHelper();
+    final PodcastLocal pdt =PodcastLocal(t.title, t.image, t.rss);
+    dbHelper.savePodcastLocal(pdt);
+    final snackBar = SnackBar(content: Text('Subscribed'),);
+    Scaffold.of(context).showSnackBar(snackBar);
+    setState(() {
+      _issubscribe = !_issubscribe;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _issubscribe = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.0),
+      child: ListTile(
+        leading: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          child: Image.network(
+            widget.onlinePodcast.image,
+            height: 40.0,
+            width: 40.0,
+            fit: BoxFit.fitWidth,
+            alignment: Alignment.center,
+          ),
+        ),
+        title: Text(widget.onlinePodcast.title),
+        subtitle: Text(widget.onlinePodcast.publisher),
+        trailing: !_issubscribe
+            ? OutlineButton(
+                child: Text('Subscribe', style: TextStyle(color: Colors.blue)),
+                onPressed: () {
+                  _subscribe(widget.onlinePodcast);
+                })
+            : OutlineButton(child: Text('Subscribed'), onPressed: null),
+      ),
+    );
+  }
+}
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -74,31 +131,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           scrollDirection: Axis.vertical,
                           itemCount: content.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              padding: EdgeInsets.symmetric(horizontal: 12.0),
-                              child: ListTile(
-                                leading: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0)),
-                                  child: Image.network(
-                                    content[index].image,
-                                    height: 40.0,
-                                    width: 40.0,
-                                    fit: BoxFit.fitWidth,
-                                    alignment: Alignment.center,
-                                  ),
-                                ),
-                                title: Text(content[index].title),
-                                subtitle: Text(content[index].publisher),
-                                trailing: !_subscribed
-                               ? OutlineButton(
-                                child: Text('Subscribe', style:TextStyle(color: Colors.blue)),
-                                onPressed: (){
-                                  _subscribe(content[index].title);})
-                               : OutlineButton(
-                                child: Text('Subscribed'),
-                                onPressed: null),
-                              ),
+                            return SearchResult(
+                              onlinePodcast: content[index],
                             );
                           },
                         );
@@ -114,15 +148,21 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _subscribe(String t) {
-    podcastlist.add(PodcastLocal(t, "images/7-stories.jpg", "data/lushu.json"));
+  void _subscribe(OnlinePodcast t)  {
+    //podcastlist.add(PodcastLocal(t.title, "images/7-stories.jpg", t.rss));
+    var dbHelper =DBHelper();
+    final PodcastLocal pdt =PodcastLocal(t.title, "images/7-stories.jpg", t.rss);
+    dbHelper.savePodcastLocal(pdt);
+   /// for(int i=0; i<podcastlist.length; i++){
+    // dbHelper.savePodcastLocal(podcastlist[i]);
+    //}
     setState(() {
-          _subscribed = !_subscribed;
-        });
+      _subscribed = !_subscribed;
+    });
   }
 
   Widget buildAppBar(BuildContext context) {
-    return new AppBar(centerTitle: true, title: appBarTitle, actions: <Widget>[
+    return AppBar(centerTitle: true, title: appBarTitle, actions: <Widget>[
       new IconButton(
         icon: icon,
         onPressed: () {
@@ -189,7 +229,7 @@ class _MyHomePageState extends State<MyHomePage> {
       'Accept': "application/json"
     });
     Map searchResultMap = jsonDecode(response.body);
-    var searchResult = SearchPodcast.fromJson(searchResultMap);
+    var searchResult = await SearchPodcast.fromJson(searchResultMap);
     return searchResult.results;
   }
 }
